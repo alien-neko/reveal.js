@@ -14,16 +14,21 @@
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
 
+    <!-- Chalkboard button(等找好位置再订) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="plugin/menu/font-awesome/css/fontawesome.css">
+
+
     <!-- Printing and PDF exports -->
     <script>
         let link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        link.href = !window.location.search.match(/print-pdf/gi) ? 'css/print/paper.css' : 'css/print/pdf.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 
-    <!--[if lt IE 9]>
+    <!--[if lt IE 9]-->
     <script src="lib/js/html5shiv.js"></script>
     <![endif]-->
 </head>
@@ -34,13 +39,18 @@
 
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
-
+        <section
+                data-coursemod-shown = "true">
+            <h1>Please select markdown file</h1>
+            <input type="file" id="myfile" accept="text/*" style="font-size:24pt" />
+        </section>
         <section
                 data-markdown=""
                 data-separator="^===\n"
                 data-separator-vertical="^---\n"
                 data-separator-notes="^Note:"
-                data-charset="utf-8">
+                data-charset="utf-8"
+                data-coursemod-shown = "true">
         </section>
 
     </div>
@@ -61,10 +71,45 @@
         markdown: {
             smartypants: true
         },
+        pdfExportShortcut: 'E',
+        toolbar: {
+            position: 'bottom',
+            captureMenu: true,
+            capturePlaybackControl: true,
+            notes: true,
+            pause: true,
+            overview: false,
+            help: false,
+            markers: true,
+        },
+        //chalkboard
+        chalkboard: {
+            src: null,
+            readOnly: undefined,
+            toggleChalkboardButton: { left: "30px", bottom: "100px", top: "auto", right: "auto" },
+            toggleNotesButton: { left: "60px", bottom: "100px", top: "auto", right: "auto" },
+            transition: 800,
+            theme: "chalkboard",
+            // configuration options for notes canvas and chalkboard
+            color: [ 'rgba(0,0,255,1)', 'rgba(255,255,255,0.5)' ],
+            background: [ 'rgba(127,127,127,.1)' , 'reveal.js-plugins/chalkboard/img/blackboard.png' ],
+            pen: [ 'crosshair', 'pointer' ]
+        },
+        coursemod: {
+            enabled: true,
+            shown: true
+        },
+        spotlight: {
+            size: 60,
+            toggleSpotlightOnMouseDown: true,
+            presentingCursor: "none",
+            presentingCursorOnlyVisibleWhenSpotlightVisible: true,
+
+        },
 
         transition: 'slide', // none/fade/slide/convex/concave/zoom
 
-// More info https://github.com/hakimel/reveal.js#dependencies
+        // More info https://github.com/hakimel/reveal.js#dependencies
         dependencies: [
             {
                 src: 'lib/js/classList.js', condition: function () {
@@ -86,10 +131,27 @@
                     hljs.initHighlightingOnLoad();
                 }
             },
-            {src: 'plugin/search/search.js', async: true},
-            {src: 'plugin/zoom-js/zoom.js', async: true},
-            {src: 'plugin/notes/notes.js', async: true}
-        ]
+            { src: '../reveal.js/plugin/math/math.js', async: true },
+            { src: 'plugin/search/search.js', async: true },
+            { src: 'plugin/zoom-js/zoom.js', async: true },
+            { src: 'plugin/notes/notes.js', async: true },
+            { src: 'node_modules/reveal.js-menu/menu.js',async:true },
+            { src: 'node_modules/reveal.js-toolbar/toolbar.js',async:true },
+            { src: 'plugin/chalkboard/chalkboard.js',async:true },
+            { src: 'plugin/coursemod/coursemod.js', async: true },
+            { src: 'plugin/spotlight/spotlight.js', async: true },
+            { src: 'plugin/pdfexport/pdfexport.js', async: true }
+        ],
+
+        keyboard: {
+            //由于没有相关函数已失灵
+            //93: function() {RevealSpotlight.togglePresentationMode();},// enter/leave presentation mode by pressing key 'Windows Menu/Right'
+            46: function() {
+                RevealChalkboard.clear()
+            },	// clear chalkboard when 'DEL' is pressed
+            8: function() { RevealChalkboard.reset() },	// reset chalkboard data on current slide when 'BACKSPACE' is pressed
+            68: function() { RevealChalkboard.download() },	// downlad recorded chalkboard drawing when 'd' is pressed
+        },
     });
 
 
