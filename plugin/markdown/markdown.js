@@ -214,7 +214,7 @@
 				datacharset = section.getAttribute( 'data-charset' );
 
 				// see https://developer.mozilla.org/en-US/docs/Web/API/element.getAttribute#Notes
-				if( datacharset != null && datacharset != '' ) {
+				if( datacharset != null && datacharset !== '' ) {
 					xhr.overrideMimeType( 'text/html; charset=' + datacharset );
 				}
 
@@ -243,10 +243,10 @@
 					}
 				};
 
-				xhr.open( 'GET', url, false );
+				xhr.open( 'GET', url, true );
 
 				try {
-					xhr.send();
+                    xhr = new XMLHttpRequest();
 				}
 				catch ( e ) {
 					alert( 'Failed to get the Markdown file ' + url + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
@@ -303,7 +303,7 @@
 	 */
 	function addAttributes( section, element, previousElement, separatorElementAttributes, separatorSectionAttributes ) {
 
-		if ( element != null && element.childNodes != undefined && element.childNodes.length > 0 ) {
+		if ( element != null && element.childNodes !== undefined && element.childNodes.length > 0 ) {
 			previousParentElement = element;
 			for( var i = 0; i < element.childNodes.length; i++ ) {
 				childElement = element.childNodes[i];
@@ -311,7 +311,7 @@
 					j = i - 1;
 					while ( j >= 0 ) {
 						aPreviousChildElement = element.childNodes[j];
-						if ( typeof aPreviousChildElement.setAttribute == 'function' && aPreviousChildElement.tagName != "BR" ) {
+						if ( typeof aPreviousChildElement.setAttribute === 'function' && aPreviousChildElement.tagName !== "BR" ) {
 							previousParentElement = aPreviousChildElement;
 							break;
 						}
@@ -319,18 +319,18 @@
 					}
 				}
 				parentSection = section;
-				if( childElement.nodeName ==  "section" ) {
+				if( childElement.nodeName === "section" ) {
 					parentSection = childElement ;
 					previousParentElement = childElement ;
 				}
-				if ( typeof childElement.setAttribute == 'function' || childElement.nodeType == Node.COMMENT_NODE ) {
+				if ( typeof childElement.setAttribute === 'function' || childElement.nodeType === Node.COMMENT_NODE ) {
 					addAttributes( parentSection, childElement, previousParentElement, separatorElementAttributes, separatorSectionAttributes );
 				}
 			}
 		}
 
-		if ( element.nodeType == Node.COMMENT_NODE ) {
-			if ( addAttributeInElement( element, previousElement, separatorElementAttributes ) == false ) {
+		if ( element.nodeType === Node.COMMENT_NODE ) {
+			if ( addAttributeInElement( element, previousElement, separatorElementAttributes ) === false ) {
 				addAttributeInElement( element, section, separatorSectionAttributes );
 			}
 		}
